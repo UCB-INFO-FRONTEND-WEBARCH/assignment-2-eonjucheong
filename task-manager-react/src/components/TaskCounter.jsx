@@ -1,7 +1,10 @@
-function TaskCounter() {
+function TaskCounter({tasks = []}) {
+    const totalTasks = tasks.length
+    const completedTasks = tasks.filter(task => task.completed).length
+
     return (
-        <div>
-            <h2>My first task counter</h2>
+        <div className = "task-counter">
+            <p>{completedTasks}/{totalTasks} tasks</p>
         </div>
     )
 }

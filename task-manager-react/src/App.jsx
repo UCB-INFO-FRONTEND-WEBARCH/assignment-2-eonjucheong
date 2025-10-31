@@ -9,41 +9,55 @@ import menu_icon from '../../assets/menu_icon.png'
 import search_icon from '../../assets/search_icon.png'
 import inbox_icon from '../../assets/inbox_icon.png'
 import upcoming_icon from '../../assets/upcoming_icon.png'
-// import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [tasks, setTasks] = useState([])
+  const [filter, setFilter] = useState('all')
+  const [inputValue, setInputValue] = useState("")
+  const filteredTasks = getFilteredTasks()
+
+  function getFilteredTasks() {
+    if (filter === "active") {
+      return tasks.filter((task) => !task.completed)
+    } else if (filter === "completed") {
+      return tasks.filter((task) => task.completed)
+    } else {
+      return tasks
+    }
+  }
+
+  const addTask = (task) => {
+    const newTask = {
+      id: Date.now(),
+      text: task,
+      completed: false
+    }
+    setTasks([...tasks, newTask])
+  }
+  const deleteTask = (taskId) => {
+    const updatedTasks = tasks.filter((task) => task.id !== taskId)
+    setTasks(updatedTasks)
+  }
+
+  const toggleTask = (taskId) => {
+    const updatedTasks = tasks.map((task) => {
+      if (task.id === taskId) {
+        return { ...task, completed: !task.completed }
+      }
+      return task
+    })
+    setTasks(updatedTasks)
+  }
+
+
 
   return (
-    // <>
-    //   <div>
-    //     <a href="https://vite.dev" target="_blank">
-    //       <img src={viteLogo} className="logo" alt="Vite logo" />
-    //     </a>
-    //     <a href="https://react.dev" target="_blank">
-    //       <img src={reactLogo} className="logo react" alt="React logo" />
-    //     </a>
-    //   </div>
-    //   <h1>Vite + React</h1>
-    //   <div className="card">
-    //     <button onClick={() => setCount((count) => count + 1)}>
-    //       count is {count}
-    //     </button>
-    //     <p>
-    //       Edit <code>src/App.jsx</code> and save to test HMR
-    //     </p>
-    //   </div>
-    //   <p className="read-the-docs">
-    //     Click on the Vite and React logos to learn more
-    //   </p>
-    // </>
 <div className="App">
   <header className="site-header">
     <button className="menu"> 
       <img className="menu-icon" src={menu_icon} alt="Menu" />
     </button>
-    <p>This is the header</p>
     <form className="search"> 
       <label className="search-container">
         <img className="search-icon" src={search_icon} alt="Search" />
@@ -53,19 +67,11 @@ function App() {
 
     <div className="header-right">
       <img src={check_icon} alt="Check" className="check-icon" />
-      <span className="task-counter">30/5</span>
+      <span className="task-counter">
+      <TaskCounter tasks = {tasks}/>
+      </span>
     </div>
   </header>
-
-  <h1>Task Manager</h1>
-  <p>Task Form</p>
-  <TaskForm />
-  <p>Task Counter</p>
-  <TaskCounter />
-  <p>Task List</p>
-  <TaskList />
-  <p>Task Item</p>
-  <TaskItem />
 
   <div className="site-main">
     <aside className="nav" aria-label="Main navigation">
@@ -92,18 +98,20 @@ function App() {
 
     <section className="article">
       <section className="inbox">
-        <h1>Inbox</h1>
-        <ul className="task-list">
-          <li><label><input type="checkbox" className="circular-button" /> Call Mom</label></li>
-          <hr />
-          <li><label><input type="checkbox" className="circular-button" /> Buy the new issue of Scientific American</label></li>
-          <hr />
-          <li><label><input type="checkbox" className="circular-button" /> Return the textbook to Josie</label></li>
-          <hr />
-          <li><label><input type="checkbox" className="circular-button" /> Buy the new album by Rake</label></li>
-          <hr />
-          <li><label><input type="checkbox" className="circular-button" /> Buy a gift card for Dad</label></li>
-        </ul>
+      <h1>Tasks</h1>
+      <div>
+      <span onClick = {() => setFilter("all")}>all</span>
+        <span className = "filter-separator"> | </span>
+        <span onClick = {() => setFilter("active")}>Active</span>
+        <span className = "filter-separator"> | </span>
+        <span onClick = {() => setFilter("completed")}>Completed</span>
+      </div>
+      <TaskForm onAddTask = {addTask}/>
+      <p>To-Do List</p>
+      <TaskList 
+        tasks = {tasks}
+        onToggle = {toggleTask}
+        onDelete = {deleteTask}/>
       </section>
     </section>
   </div>
