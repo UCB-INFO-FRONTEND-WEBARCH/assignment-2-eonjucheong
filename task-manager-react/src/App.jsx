@@ -14,7 +14,6 @@ import './App.css'
 function App() {
   const [tasks, setTasks] = useState([])
   const [filter, setFilter] = useState('all')
-  const [inputValue, setInputValue] = useState("")
   const filteredTasks = getFilteredTasks()
 
   function getFilteredTasks() {
@@ -100,7 +99,7 @@ function App() {
       <section className="inbox">
       <h1>Tasks</h1>
       <div>
-      <span onClick = {() => setFilter("all")}>all</span>
+      <span onClick = {() => setFilter("all")}>All</span>
         <span className = "filter-separator"> | </span>
         <span onClick = {() => setFilter("active")}>Active</span>
         <span className = "filter-separator"> | </span>
@@ -109,9 +108,10 @@ function App() {
       <TaskForm onAddTask = {addTask}/>
       <p>To-Do List</p>
       <TaskList 
-        tasks = {tasks}
+        tasks = {filteredTasks}
         onToggle = {toggleTask}
-        onDelete = {deleteTask}/>
+        onDelete = {deleteTask}
+        onClick = {getFilteredTasks}/>
       </section>
     </section>
   </div>
