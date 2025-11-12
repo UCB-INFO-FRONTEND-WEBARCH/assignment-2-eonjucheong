@@ -184,6 +184,12 @@ justify-content: center;
   margin-bottom: 8px;
 }
 
+.task-item span.completed {
+  text-decoration: line-through;
+  color: #572323;
+  opacity: 0.6;
+}
+
 hr {
   opacity: 0.5;
   border: none;
